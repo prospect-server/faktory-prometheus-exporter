@@ -10,7 +10,7 @@
 
 ## In a nutshell
 
-The *faktory_exporter* is a simple server that scrapes a configured 
+The *faktory_exporter* is a simple server that scrapes a configured
 [Faktory](https://github.com/contribsys/faktory)
 instance for stats by issuing the "INFO" command and exports them via string message
 for [Prometheus](https://prometheus.io/docs/introduction/overview/) consumption.
@@ -31,7 +31,7 @@ faktory-prometheus-exporter [--faktory_url='tcp://:[password]@localhost:7419']
 
 ### Develop using uv or pip-compile
 
-The requirements format are the ones defined by `pip-compile`, from 
+The requirements format are the ones defined by `pip-compile`, from
 [pip-tools](https://github.com/jazzband/pip-tools).
 You may also equally use `uv pip compile` from [uv](https://github.com/astral-sh/uv).
 
