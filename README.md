@@ -1,5 +1,9 @@
 # faktory-prometheus-exporter
 
+![PyPI - Version](https://img.shields.io/pypi/v/faktory-prometheus-exporter)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/faktory-prometheus-exporter)
+
+
 > A Faktory Exporter written in Python for Prometheus.
 
 ---

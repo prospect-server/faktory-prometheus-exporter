@@ -37,6 +37,8 @@ faktory-prometheus-exporter = "faktory_prometheus_exporter:main"
 
 [project.urls]
 Repository = "https://github.com/prospect-server/faktory-prometheus-exporter"
+PyPI = "https://pypi.org/project/faktory-prometheus-exporter/"
+Gitlab Mirror = "https://gitlab.com/prospect-energy/faktory-prometheus-exporter"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.in"]}
