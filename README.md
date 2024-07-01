@@ -18,8 +18,16 @@ for [Prometheus](https://prometheus.io/docs/introduction/overview/) consumption.
 
 ## Usage
 
+### Arguments
+
 The URL used to scrape info from faktory is by default `tcp://:@localhost:7419`, but
 can be overwritten by using the `--faktory_url` arg or by specifying a `FAKTORY_URL`
+environment variable.
+
+The app will by default run in interactive mode, printing the metrics and exiting. You
+can activate the daemon mode by adding `--daemonize` or by specifying a 
+`DAEMONIZE_EXPORTER` environment variable. The activated daemon will by default run on
+port *7423* but this can be changed by specifying `--port=` or by defining the `PORT`
 environment variable.
 
 ### Install with pip
@@ -27,7 +35,7 @@ environment variable.
 Fastest way is simply running (preferably in a python env):
 ```
 pip install faktory-prometheus-exporter
-faktory-prometheus-exporter [--faktory_url='tcp://:[password]@localhost:7419']
+faktory-prometheus-exporter [--faktory_url='tcp://:[password]@localhost:7419'] [--help]
 ```
 
 ### Develop using uv or pip-compile

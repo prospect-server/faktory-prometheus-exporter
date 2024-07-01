@@ -15,4 +15,5 @@ ENV PYTHONUNBUFFERED 1
 # If ran locally, comment this line out
 RUN pip install faktory_prometheus_exporter
 
+EXPOSE     7423
 ENTRYPOINT [ "faktory-prometheus-exporter" ]

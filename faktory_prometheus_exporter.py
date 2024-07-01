@@ -18,13 +18,22 @@ Output example of the Faktory info call.
 'server_utc_time': '10:59:14 UTC'}
 """  # noqa: E501
 
+import time
+
 import click
-from prometheus_client import Gauge, Summary, generate_latest
+from prometheus_client import Gauge, Summary, generate_latest, start_http_server
 from pyfaktory import Client
 
+INTERVAL_IN_SECONDS = 30
 # Create a metric to track time spent and requests made.
 scraping_time = Summary("exporter_scraping_seconds", "Time spent scraping metrics")
-
+command_count = Gauge("command_count", "Faktory Command Count")
+connections = Gauge("connections", "Connections count")
+jobs = Gauge("jobs", "Faktory Jobs count", ["state"])
+total_queues = Gauge("total_queues", "Faktory queues")
+enqueued_per_queue = Gauge("enqueued_per_queue", "Jobs enqueued in queues", ["name"])
+retries_enqueued = Gauge("retries_enqueued", "Job retries enqueued")
+dead_size = Gauge("dead_size", "Job Dead")
 
 @scraping_time.time()
 def scrape_info(faktory_url: str) -> dict:
@@ -37,23 +46,30 @@ def scrape_info(faktory_url: str) -> dict:
 def process(faktory_url: str) -> None:
     """Gather the important information in Prometheus Metrics."""
     info = scrape_info(faktory_url=faktory_url)
-    c = Gauge("command_count", "Faktory Command Count")
-    c.set(info["server"]["command_count"])
-    c = Gauge("connections", "Connections count")
-    c.set(info["server"]["connections"])
-    c = Gauge("jobs", "Faktory Jobs count", ["state"])
-    c.labels("enqueued").set(info["faktory"]["total_enqueued"])
-    c.labels("failures").set(info["faktory"]["total_failures"])
-    c.labels("processed").set(info["faktory"]["total_processed"])
-    c = Gauge("total_queues", "Faktory queues")
-    c.set(info["faktory"]["total_queues"])
-    c = Gauge("enqueued_per_queue", "Jobs enqueued in queues", ["name"])
+    command_count.set(info["server"]["command_count"])
+    connections.set(info["server"]["connections"])
+    jobs.labels("enqueued").set(info["faktory"]["total_enqueued"])
+    jobs.labels("failures").set(info["faktory"]["total_failures"])
+    jobs.labels("processed").set(info["faktory"]["total_processed"])
+    total_queues.set(info["faktory"]["total_queues"])
     for name, size in info["faktory"]["queues"].items():
-        c.labels(name).set(size)
-    c = Gauge("retries_enqueued", "Job retries enqueued")
-    c.set(info["faktory"]["tasks"]["Retries"]["enqueued"])
-    c = Gauge("dead_size", "Job Dead")
-    c.set(info["faktory"]["tasks"]["Dead"]["size"])
+        enqueued_per_queue.labels(name).set(size)
+    retries_enqueued.set(info["faktory"]["tasks"]["Retries"]["enqueued"])
+    dead_size.set(info["faktory"]["tasks"]["Dead"]["size"])
+
+
+def _run_interactive(faktory_url: str) -> None:
+    process(faktory_url=faktory_url)
+    print(generate_latest().decode(), end="")  # noqa: T201
+
+
+def _run_daemonize(faktory_url: str, port: int) -> None:
+    print(f"Running on port {port}, you may check http://localhost:{port}/metrics")  # noqa: T201
+    start_http_server(port)
+
+    while True:
+        process(faktory_url=faktory_url)
+        time.sleep(INTERVAL_IN_SECONDS)
 
 
 @click.command()
@@ -63,10 +79,25 @@ def process(faktory_url: str) -> None:
     default="tcp://:@localhost:7419",
     help="Faktory server URL.",
 )
-def main(faktory_url: str) -> None:
+@click.option(
+    "--daemonize", "-d",
+    envvar="DAEMONIZE_EXPORTER",
+    is_flag=True,
+    default=False,
+    help="Daemonize exporter.",
+)
+@click.option(
+    "--port", "-p",
+    envvar="PORT",
+    default=7423,
+    help="Port to run the daemon, makes only sense with the --daemon option.",
+)
+def main(faktory_url: str, daemonize: bool, port: int) -> None:
     """Basic Faktory metrics exporter for Prometheus."""
-    process(faktory_url=faktory_url)
-    print(generate_latest().decode(), end="")  # noqa: T201
+    if daemonize:
+        _run_daemonize(faktory_url=faktory_url, port=port)
+    else:
+        _run_interactive(faktory_url=faktory_url)
 
 
 if __name__ == "__main__":
