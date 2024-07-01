@@ -35,6 +35,7 @@ enqueued_per_queue = Gauge("enqueued_per_queue", "Jobs enqueued in queues", ["na
 retries_enqueued = Gauge("retries_enqueued", "Job retries enqueued")
 dead_size = Gauge("dead_size", "Job Dead")
 
+
 @scraping_time.time()
 def scrape_info(faktory_url: str) -> dict:
     """Scraping."""
@@ -80,14 +81,16 @@ def _run_daemonize(faktory_url: str, port: int) -> None:
     help="Faktory server URL.",
 )
 @click.option(
-    "--daemonize", "-d",
+    "--daemonize",
+    "-d",
     envvar="DAEMONIZE_EXPORTER",
     is_flag=True,
     default=False,
     help="Daemonize exporter.",
 )
 @click.option(
-    "--port", "-p",
+    "--port",
+    "-p",
     envvar="PORT",
     default=7423,
     help="Port to run the daemon, makes only sense with the --daemon option.",

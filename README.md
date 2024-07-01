@@ -25,7 +25,7 @@ can be overwritten by using the `--faktory_url` arg or by specifying a `FAKTORY_
 environment variable.
 
 The app will by default run in interactive mode, printing the metrics and exiting. You
-can activate the daemon mode by adding `--daemonize` or by specifying a 
+can activate the daemon mode by adding `--daemonize` or by specifying a
 `DAEMONIZE_EXPORTER` environment variable. The activated daemon will by default run on
 port *7423* but this can be changed by specifying `--port=` or by defining the `PORT`
 environment variable.
