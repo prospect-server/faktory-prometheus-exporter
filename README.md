@@ -1,7 +1,7 @@
 # faktory-prometheus-exporter
 
-![PyPI - Version](https://img.shields.io/pypi/v/faktory-prometheus-exporter)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/faktory-prometheus-exporter)
+[![PyPI - Version](https://img.shields.io/pypi/v/faktory-prometheus-exporter)](https://pypi.org/project/faktory-prometheus-exporter/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/faktory-prometheus-exporter)](https://pypi.org/project/faktory-prometheus-exporter/)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/prospect-server/faktory-prometheus-exporter/main.svg)](https://results.pre-commit.ci/latest/github/prospect-server/faktory-prometheus-exporter/main)
 
 
