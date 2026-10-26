@@ -16,7 +16,7 @@ Output example of the Faktory info call.
   'command_count': 156157, 'connections': 10, 'description': 'Faktory',
   'faktory_version': '1.8.0', 'uptime': 60649, 'used_memory_mb': 13},
 'server_utc_time': '10:59:14 UTC'}
-"""  # noqa: E501
+"""  # ruff: ignore[line-too-long]
 
 import time
 
@@ -61,11 +61,11 @@ def process(faktory_url: str) -> None:
 
 def _run_interactive(faktory_url: str) -> None:
     process(faktory_url=faktory_url)
-    print(generate_latest().decode(), end="")  # noqa: T201
+    print(generate_latest().decode(), end="")  # ruff: ignore[print]
 
 
 def _run_daemonize(faktory_url: str, port: int) -> None:
-    print(f"Running on port {port}, you may check http://localhost:{port}/metrics")  # noqa: T201
+    print(f"Running on port {port}, you may check http://localhost:{port}/metrics")  # ruff: ignore[print]
     start_http_server(port)
 
     while True:
